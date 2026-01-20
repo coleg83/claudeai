@@ -116,7 +116,7 @@
                OLED_PRINT "Exiting..."
                OLED_UPDATE
                DELAY 300
-               BREAK
+               LBREAK
 
            ELSE
                CONTINUE
@@ -186,7 +186,7 @@
 
            IF $r == 4 THEN
                $_GV0 = 0
-               BREAK
+               LBREAK
            END_IF
 
            IF $r == 1 THEN
@@ -195,7 +195,7 @@
                OLED_PRINT "Exiting..."
                OLED_UPDATE
                DELAY 300
-               BREAK
+               LBREAK
            END_IF
 
            CONTINUE
