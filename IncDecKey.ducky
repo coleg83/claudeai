@@ -1,1 +1,318 @@
 
+// ==========================
+ // Tap dance key script
+ // ==========================
+
+ DEFAULTDELAY 0
+ $_DONT_REPEAT = 1
+
+ VAR $count = 0
+ VAR $released = FALSE
+
+ REM debug OFF
+ VAR $showDebug = FALSE
+ VAR $multiTapDelay = 200
+
+ FUNCTION tapDanceAction()
+
+   IF $released THEN
+
+     // ==========================
+     // SINGLE TAP — OLED MENU
+     // ==========================
+     IF $count == 1 THEN
+
+       OLED_CLEAR
+       OLED_CURSOR 49 20
+       OLED_PRINT "Taps"
+
+       OLED_CURSOR 14 40
+       OLED_PRINT "2 - Adjust Var"
+
+       OLED_CURSOR 32 60
+       OLED_PRINT "3 - Blank"
+
+       OLED_CURSOR 18 80
+       OLED_PRINT "4 - Clear Var"
+
+       OLED_UPDATE
+       DELAY 1500
+       OLED_CLEAR
+       OLED_UPDATE
+
+
+     // ==========================
+     // DOUBLE TAP — COUNTER MODE
+     // ==========================
+     ELSE IF $count == 2 THEN
+
+       DEFINE INC_KEY 13
+       DEFINE DEC_KEY 9
+       DEFINE MIN_VAL 0
+       DEFINE MAX_VAL 100
+
+       IF $_GV0 == 0 THEN
+         $_GV0 = MIN_VAL
+       END_IF
+
+       WHILE TRUE
+           OLED_CLEAR
+
+           OLED_CURSOR 25 0
+           OLED_PRINT "Red to Exit"
+
+           OLED_CURSOR 0 45
+           OLED_PRINT "Green to Decrease"
+
+           OLED_CURSOR 0 60
+           OLED_PRINT "Blue to Increase"
+
+           OLED_CURSOR 50 100
+           OLED_PRINT "Value:"
+           OLED_CURSOR 100 100
+           OLED_PRINT $_GV0
+
+           OLED_UPDATE
+
+           SWC_SET 1 255 0 0
+           SWC_SET 2 0 0 0
+           SWC_SET 3 0 0 0
+           SWC_SET 4 0 0 0
+           SWC_SET 5 0 0 0
+           SWC_SET 6 0 0 0
+           SWC_SET 7 0 0 0
+           SWC_SET 8 0 0 0
+           SWC_SET 9 0 255 0
+           SWC_SET 10 0 0 0
+           SWC_SET 11 0 0 0
+           SWC_SET 12 0 0 0
+           SWC_SET 13 0 0 255
+           SWC_SET 14 0 0 0
+           SWC_SET 15 0 0 0
+           SWC_SET 16 0 0 0
+           SWC_SET 17 0 0 0
+           SWC_SET 19 0 0 0
+           SWC_SET 20 0 0 0
+
+           VAR $k = $_BLOCKING_READKEY
+
+           OLED_CURSOR 0 120
+           OLED_PRINT $k
+           OLED_UPDATE
+
+           IF $k == INC_KEY THEN
+               IF $_GV0 < MAX_VAL THEN
+                   $_GV0 = $_GV0 + 1
+               END_IF
+
+           ELSE IF $k == DEC_KEY THEN
+               IF $_GV0 > MIN_VAL THEN
+                   $_GV0 = $_GV0 - 1
+               END_IF
+
+           ELSE IF $k == 1 THEN
+               OLED_CLEAR
+               OLED_CURSOR 0 0
+               OLED_PRINT "Exiting..."
+               OLED_UPDATE
+               DELAY 300
+               BREAK
+
+           ELSE
+               CONTINUE
+           END_IF
+       END_WHILE
+
+
+     // ==========================
+     // TRIPLE TAP — DISPLAY VALUE
+     // ==========================
+     ELSE IF $count == 3 THEN
+
+       OLED_CLEAR
+       OLED_CURSOR 0 60
+       OLED_PRINT "Triple-Tap"
+       OLED_PRINT "Value:"
+       OLED_CURSOR 100 100
+       OLED_PRINT $_GV0
+       DELAY 300
+       OLED_UPDATE
+
+
+     // ==========================
+     // QUADRUPLE TAP — RESET MODE
+     // ==========================
+     ELSE IF $count == 4 THEN
+
+       SWC_RESET 1
+       SWC_RESET 2
+       SWC_RESET 3
+       SWC_RESET 4
+       SWC_RESET 5
+       SWC_RESET 6
+       SWC_RESET 7
+       SWC_RESET 8
+       SWC_RESET 9
+       SWC_RESET 10
+       SWC_RESET 11
+       SWC_RESET 12
+       SWC_RESET 13
+       SWC_RESET 14
+       SWC_RESET 15
+       SWC_RESET 16
+       SWC_RESET 17
+       SWC_RESET 19
+       SWC_RESET 20
+
+       SWC_SET 1 255 0 0
+       SWC_SET 4 0 0 255
+       SWC_SET 5 0 0 0
+
+       OLED_CLEAR
+       OLED_CURSOR 10 45
+       OLED_PRINT "Red to Exit"
+       OLED_CURSOR 10 60
+       OLED_PRINT "Blue to Reset"
+       OLED_CURSOR 10 75
+       OLED_PRINT "and Exit"
+       OLED_UPDATE
+
+       WHILE TRUE
+           VAR $r = $_BLOCKING_READKEY
+
+           IF $r == 4 THEN
+               $_GV0 = 0
+               BREAK
+           END_IF
+
+           IF $r == 1 THEN
+               BREAK
+           END_IF
+
+           CONTINUE
+       END_WHILE
+
+       RETURN
+
+
+     ELSE IF $count >= 5 THEN
+       REM no STRING output
+     END_IF
+
+
+   ELSE
+
+     IF $count == 0 THEN
+       REM no STRING
+
+     ELSE IF $count == 1 THEN
+       REM no STRING
+
+     ELSE IF $count == 2 THEN
+       REM no STRING
+
+     ELSE IF $count == 3 THEN
+       REM no STRING
+
+     ELSE IF $count >= 4 THEN
+       REM no STRING
+     END_IF
+
+   END_IF
+
+ END_FUNCTION
+
+
+ // ==========================
+ // Display Helpers
+ // ==========================
+
+ VAR $printIndex = 0
+
+ FUNCTION resetDisplay()
+   OLED_CLEAR
+   OLED_CURSOR 0 0
+   $printIndex = 0
+ END_FUNCTION
+
+ FUNCTION printLn()
+   $printIndex = $printIndex + 1
+   OLED_CURSOR 0 $printIndex*12
+ END_FUNCTION
+
+
+ // ==========================
+ // Main Tap Dance Engine
+ // ==========================
+
+ VAR $startTime = $_TIME_MS
+ VAR $pressTimestamp = $startTime
+ VAR $pressDuration = 0
+ VAR $releaseTimestamp = 0
+ VAR $releaseDuration = 0
+ VAR $timedOut = FALSE
+
+ FUNCTION printStatus()
+   IF $showDebug != TRUE THEN
+     RETURN
+   END_IF
+
+   resetDisplay()
+   OLED_PRINT Key ID: $_THIS_KEYID
+   printLn()
+   OLED_PRINT pTimestamp: $pressTimestamp
+   printLn()
+   OLED_PRINT pDuration: $pressDuration ms
+   printLn()
+   OLED_PRINT rTimestamp: $releaseTimestamp
+   printLn()
+   OLED_PRINT rDuration: $releaseDuration ms
+   printLn()
+   OLED_PRINT Count: $count
+   printLn()
+   OLED_PRINT timeout: $timedOut
+   printLn()
+   OLED_PRINT released: $released
+   OLED_UPDATE
+ END_FUNCTION
+
+ VAR $lastActivityTimestamp = $startTime
+
+ WHILE 1
+   VAR $currentTime = $_TIME_MS
+   VAR $keyPress = $_READKEY
+   VAR $lastActivityDuration = $currentTime - $lastActivityTimestamp
+
+   IF $keyPress == $_THIS_KEYID && $pressTimestamp == 0 THEN
+     $pressTimestamp = $currentTime
+     $releaseDuration = $currentTime - $releaseTimestamp
+     $pressDuration = 0
+     $releaseTimestamp = 0
+     $lastActivityTimestamp = $currentTime
+     printStatus()
+
+   ELSE IF $keyPress == 0 && $pressTimestamp > 0 THEN
+     $pressDuration = $currentTime - $pressTimestamp
+     $releaseTimestamp = $currentTime
+     $pressTimestamp = 0
+     $releaseDuration = 0
+     $count = $count + 1
+     $lastActivityTimestamp = $currentTime
+     printStatus()
+
+   ELSE IF $lastActivityDuration >= $multiTapDelay THEN
+     $timedOut = TRUE
+     LBREAK
+
+   ELSE IF $keyPress > 0 && $keyPress != $_THIS_KEYID THEN
+     LBREAK
+   END_IF
+ END_WHILE
+
+ $released = $releaseTimestamp > 0
+ tapDanceAction()
+
+ IF $showDebug THEN
+   printStatus()
+   DELAY 3000
+ END_IF
