@@ -123,6 +123,10 @@
            END_IF
        END_WHILE
 
+       OLED_CLEAR
+       OLED_UPDATE
+       RETURN
+
 
      // ==========================
      // TRIPLE TAP — DISPLAY VALUE
@@ -186,12 +190,19 @@
            END_IF
 
            IF $r == 1 THEN
+               OLED_CLEAR
+               OLED_CURSOR 0 0
+               OLED_PRINT "Exiting..."
+               OLED_UPDATE
+               DELAY 300
                BREAK
            END_IF
 
            CONTINUE
        END_WHILE
 
+       OLED_CLEAR
+       OLED_UPDATE
        RETURN
 
 
