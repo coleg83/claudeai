@@ -96,10 +96,6 @@
 
            VAR $k = $_BLOCKING_READKEY
 
-           OLED_CURSOR 0 120
-           OLED_PRINT $k
-           OLED_UPDATE
-
            IF $k == INC_KEY THEN
                IF $_GV0 < MAX_VAL THEN
                    $_GV0 = $_GV0 + 1
