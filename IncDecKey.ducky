@@ -96,10 +96,6 @@
 
            VAR $k = $_BLOCKING_READKEY
 
-           OLED_CURSOR 0 120
-           OLED_PRINT $k
-           OLED_UPDATE
-
            IF $k == INC_KEY THEN
                IF $_GV0 < MAX_VAL THEN
                    $_GV0 = $_GV0 + 1
@@ -116,12 +112,16 @@
                OLED_PRINT "Exiting..."
                OLED_UPDATE
                DELAY 300
-               BREAK
+               LBREAK
 
            ELSE
                CONTINUE
            END_IF
        END_WHILE
+
+       OLED_CLEAR
+       OLED_UPDATE
+       RETURN
 
 
      // ==========================
@@ -144,6 +144,56 @@
      // ==========================
      ELSE IF $count == 4 THEN
 
+       SWC_SET 2 0 0 0
+       SWC_SET 3 0 0 0
+       SWC_SET 5 0 0 0
+       SWC_SET 6 0 0 0
+       SWC_SET 7 0 0 0
+       SWC_SET 8 0 0 0
+       SWC_SET 9 0 0 0
+       SWC_SET 10 0 0 0
+       SWC_SET 11 0 0 0
+       SWC_SET 12 0 0 0
+       SWC_SET 13 0 0 0
+       SWC_SET 14 0 0 0
+       SWC_SET 15 0 0 0
+       SWC_SET 16 0 0 0
+       SWC_SET 17 0 0 0
+       SWC_SET 19 0 0 0
+       SWC_SET 20 0 0 0
+
+       SWC_SET 1 255 0 0
+       SWC_SET 4 0 0 255
+
+       OLED_CLEAR
+       OLED_CURSOR 10 45
+       OLED_PRINT "Red to Exit"
+       OLED_CURSOR 10 60
+       OLED_PRINT "Blue to Reset"
+       OLED_CURSOR 10 75
+       OLED_PRINT "and Exit"
+       OLED_UPDATE
+
+       WHILE TRUE
+           VAR $r = $_BLOCKING_READKEY
+
+           IF $r == 4 THEN
+               $_GV0 = 0
+               LBREAK
+           END_IF
+
+           IF $r == 1 THEN
+               OLED_CLEAR
+               OLED_CURSOR 0 0
+               OLED_PRINT "Exiting..."
+               OLED_UPDATE
+               DELAY 300
+               LBREAK
+           END_IF
+
+           CONTINUE
+       END_WHILE
+
        SWC_RESET 1
        SWC_RESET 2
        SWC_RESET 3
@@ -164,34 +214,8 @@
        SWC_RESET 19
        SWC_RESET 20
 
-       SWC_SET 1 255 0 0
-       SWC_SET 4 0 0 255
-       SWC_SET 5 0 0 0
-
        OLED_CLEAR
-       OLED_CURSOR 10 45
-       OLED_PRINT "Red to Exit"
-       OLED_CURSOR 10 60
-       OLED_PRINT "Blue to Reset"
-       OLED_CURSOR 10 75
-       OLED_PRINT "and Exit"
        OLED_UPDATE
-
-       WHILE TRUE
-           VAR $r = $_BLOCKING_READKEY
-
-           IF $r == 4 THEN
-               $_GV0 = 0
-               BREAK
-           END_IF
-
-           IF $r == 1 THEN
-               BREAK
-           END_IF
-
-           CONTINUE
-       END_WHILE
-
        RETURN
 
 
